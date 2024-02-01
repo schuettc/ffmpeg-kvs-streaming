@@ -268,7 +268,7 @@ services:
 
 ### Pass credentials and environment variables
 
-This will use the `Dockerfile` used in the deployment with environment variables and a mounted volume that references `./aws`. This will allow us to pass credentials from the [`.aws/credentials`](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) file and use the associated `AWS_PROFILE`.
+This will use the `Dockerfile` used in the deployment with environment variables and a mounted volume that references `~./aws`. This will allow us to pass credentials from the [`~.aws/credentials`](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) file and use the associated `AWS_PROFILE`.
 
 Alternatively, you can export `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_SESSION_TOKEN` as environment variables.
 
