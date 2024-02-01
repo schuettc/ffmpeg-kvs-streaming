@@ -66,7 +66,6 @@ export class ECSResources extends Construct {
     this.kinesisRole = new Role(this, 'kinesisRole', {
       assumedBy: new CompositePrincipal(
         new ArnPrincipal(kvsProducerRole.roleArn),
-        // new ArnPrincipal(`arn:aws:iam::${Stack.of(this).account}:user/*`),
         new AccountPrincipal(Stack.of(this).account),
       ),
       inlinePolicies: {

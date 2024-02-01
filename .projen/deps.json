@@ -54,10 +54,6 @@
       "type": "runtime"
     },
     {
-      "name": "@aws-sdk/client-kinesis-video-archived-media",
-      "type": "runtime"
-    },
-    {
       "name": "@aws-sdk/client-s3",
       "type": "runtime"
     },

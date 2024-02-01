@@ -71,7 +71,6 @@ async function getCredentials(): Promise<
       RoleSessionName: 'kvs-stream',
     }),
   );
-
   return response.Credentials;
 }
 
@@ -139,7 +138,7 @@ async function sendStream(
 }> {
   console.log('Sending Stream');
 
-  let filename: string = randomUUID() + '.pcm';
+  let filename: string = randomUUID() + '.mov';
   await downloadInChunks({
     bucket: bucketName,
     key: keyName,
@@ -200,7 +199,7 @@ async function putMedia({ stream }: { stream: PassThrough }): Promise<{
     const response = (await axios(axiosParams)) as AxiosResponse;
     const startFragmentNumber = await getStartFragmentNumber(response);
 
-    response.data.on('data', async (chunk: Buffer) => {
+    response.data.on('data', (chunk: Buffer) => {
       if (streamCount % COUNT_FREQUENCY === 0) {
         console.info(`Stream: ${streamArn} - Chunk: ${chunk.toString()}`);
       }
