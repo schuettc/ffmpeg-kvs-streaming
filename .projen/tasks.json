@@ -124,6 +124,30 @@
         }
       ]
     },
+    "exportKvsArn": {
+      "name": "exportKvsArn",
+      "steps": [
+        {
+          "exec": "echo KVS_STREAM_ARN=$( aws cloudformation describe-stacks --stack-name KVSStreaming --region us-east-1 --query 'Stacks[0].Outputs[?OutputKey==`kvsArn`].OutputValue' --output text ) >> ./src/resources/kvsProducer/.env"
+        }
+      ]
+    },
+    "exportRole": {
+      "name": "exportRole",
+      "steps": [
+        {
+          "exec": "echo ECS_ROLE=$( aws cloudformation describe-stacks --stack-name KVSStreaming --region us-east-1 --query 'Stacks[0].Outputs[?OutputKey==`ecsRole`].OutputValue' --output text ) >> ./src/resources/kvsProducer/.env"
+        }
+      ]
+    },
+    "getExports": {
+      "name": "getExports",
+      "steps": [
+        {
+          "exec": "echo > ./src/resources/kvsProducer/.env && yarn exportRole && yarn exportKvsArn"
+        }
+      ]
+    },
     "install": {
       "name": "install",
       "description": "Install project dependencies and update lockfile (non-frozen)",
@@ -139,6 +163,14 @@
       "steps": [
         {
           "exec": "yarn install --check-files --frozen-lockfile"
+        }
+      ]
+    },
+    "launch": {
+      "name": "launch",
+      "steps": [
+        {
+          "exec": "yarn && yarn projen && yarn build && yarn cdk bootstrap && yarn cdk deploy  --require-approval never && yarn exportRole && yarn exportKvsArn"
         }
       ]
     },
@@ -186,20 +218,7 @@
       "description": "Run tests",
       "steps": [
         {
-          "exec": "jest --passWithNoTests --updateSnapshot",
-          "receiveArgs": true
-        },
-        {
           "spawn": "eslint"
-        }
-      ]
-    },
-    "test:watch": {
-      "name": "test:watch",
-      "description": "Run jest in watch mode",
-      "steps": [
-        {
-          "exec": "jest --watch"
         }
       ]
     },
@@ -211,13 +230,13 @@
       },
       "steps": [
         {
-          "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,@typescript-eslint/eslint-plugin,@typescript-eslint/parser,aws-cdk,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,eslint,jest,jest-junit,projen,ts-jest,ts-node,typescript,aws-cdk-lib,constructs"
+          "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --dep=dev,peer,prod,optional --filter=@types/node,@typescript-eslint/eslint-plugin,@typescript-eslint/parser,aws-cdk,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,eslint,projen,ts-node,typescript,@aws-sdk/client-kinesis-video,@aws-sdk/client-kinesis-video-archived-media,@aws-sdk/client-s3,@aws-sdk/client-sts,@types/aws-lambda,@types/aws4,@types/fluent-ffmpeg,@types/fs-extra,aws-cdk-lib,aws-lambda,aws4,axios,constructs,dotenv,fastify,fluent-ffmpeg,fs-extra"
         },
         {
           "exec": "yarn install --check-files"
         },
         {
-          "exec": "yarn upgrade @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit projen ts-jest ts-node typescript aws-cdk-lib constructs"
+          "exec": "yarn upgrade @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk esbuild eslint-import-resolver-typescript eslint-plugin-import eslint projen ts-node typescript @aws-sdk/client-kinesis-video @aws-sdk/client-kinesis-video-archived-media @aws-sdk/client-s3 @aws-sdk/client-sts @types/aws-lambda @types/aws4 @types/fluent-ffmpeg @types/fs-extra aws-cdk-lib aws-lambda aws4 axios constructs dotenv fastify fluent-ffmpeg fs-extra"
         },
         {
           "exec": "npx projen"

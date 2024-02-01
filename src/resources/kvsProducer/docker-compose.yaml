@@ -1,0 +1,19 @@
+version: '3'
+services:
+  ffmpeg:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - AWS_PROFILE
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_SESSION_TOKEN
+      - COUNT_FREQUENCY=60
+      - ECS_ROLE
+      - KVS_STREAM_ARN
+    volumes:
+      - ~/.aws/:/root/.aws:ro
+    ports:
+      - '80:80'
+    command: ['npm', 'start']
